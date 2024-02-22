@@ -5,6 +5,14 @@ import FilterButton from "./components/FilterButton";
 import Todo from "./components/Todo";
 import { useState } from "react";
 
+//an object with fxn values
+const FILTER_MAP = {
+	All: () => true,
+	Active: (task) => !task.completed,
+	Completed: (task) => task.completed,
+};
+const FILTER_NAMES = Object.keys(FILTER_MAP); //gets an array of names
+
 function App(props) {
 	//for creating unique IDs
 	let uID = new Date().getTime();
@@ -40,10 +48,24 @@ function App(props) {
 		setTasks(remainingTasks);
 	}
 
+	function editTask(id, newName) {
+		//similar to deleteTask
+		const editedTasks = tasks.map((task) => {
+			//check if ids match
+			if (id === task.id) {
+				//copy and return with new name
+				return { ...task, name: newName };
+			}
+			return task; //return the task if its not the one we want to edit
+		});
+		setTasks(editedTasks);
+	}
+
 	//lets create an array of Todos mapped from our task prop passed through from main.jsx
 	//the ?. lets us perform optional chaining to check if props.tasks is undef. or null
 	//key is a special prop for react -- we must always use a UNIQUE KEY
 
+	const [filter, setFilter] = useState("All");
 	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
 	const taskList = tasks?.map((task) => (
 		<Todo
@@ -54,19 +76,25 @@ function App(props) {
 			// callback props
 			toggleTaskCompleted={toggleTaskCompleted}
 			deleteTask={deleteTask}
+			editTask={editTask}
 		/>
 	));
+	// const filterList = FILTER_NAMES.map((name) => (
+	// 	<FilterButton
+	// 		key={name}
+	// 		name={name}
+	// 		isPressed={name === filter}
+	// 		setFilter={setFilter}
+	// 	/>
+	// ));
+
 	const taskNoun = taskList.length !== 1 ? "tasks" : "task";
 	const headingTxt = `${taskList.length} ${taskNoun} left`;
 	return (
 		<div className="todoapp stack-large">
 			<h1>ToDo List</h1>
 			<Form addTask={addTask} />
-			<div className="filters btn-group stack-exception">
-				<FilterButton />
-				<FilterButton />
-				<FilterButton />
-			</div>
+			{/* <div className="filters btn-group stack-exception">{filterList}</div> */}
 			<h2 id="list-heading">{headingTxt}</h2>
 			<ul
 				role="list"
