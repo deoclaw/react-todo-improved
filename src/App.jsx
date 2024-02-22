@@ -21,13 +21,6 @@ function App(props) {
 		return "id" + uID;
 	}
 
-	function addTask(name) {
-		//we need to make a newTask object to add to the array tasks
-		const newTask = { id: `${uniqueID()}`, name, completed: false };
-		// ...tasks copies the existing task array and then we add our newTask obj. at the end
-		setTasks([...tasks, newTask]);
-	}
-
 	function toggleTaskCompleted(id) {
 		//we want this to change the completed prop of ONLY the toggled task
 		//to do this, we will map over the list and change the one we toggled
@@ -67,7 +60,7 @@ function App(props) {
 
 	const [filter, setFilter] = useState("All");
 	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
-	const taskList = tasks?.map((task) => (
+	const taskList = tasks.filter(FILTER_MAP[filter]).map((task) => (
 		<Todo
 			id={task.id}
 			name={task.name}
@@ -79,14 +72,22 @@ function App(props) {
 			editTask={editTask}
 		/>
 	));
-	// const filterList = FILTER_NAMES.map((name) => (
-	// 	<FilterButton
-	// 		key={name}
-	// 		name={name}
-	// 		isPressed={name === filter}
-	// 		setFilter={setFilter}
-	// 	/>
-	// ));
+
+	const filterList = FILTER_NAMES.map((name) => (
+		<FilterButton
+			key={name}
+			name={name}
+			isPressed={name === filter}
+			setFilter={setFilter}
+		/>
+	));
+
+	function addTask(name) {
+		//we need to make a newTask object to add to the array tasks
+		const newTask = { id: `${uniqueID()}`, name, completed: false };
+		// ...tasks copies the existing task array and then we add our newTask obj. at the end
+		setTasks([...tasks, newTask]);
+	}
 
 	const taskNoun = taskList.length !== 1 ? "tasks" : "task";
 	const headingTxt = `${taskList.length} ${taskNoun} left`;
@@ -94,7 +95,7 @@ function App(props) {
 		<div className="todoapp stack-large">
 			<h1>ToDo List</h1>
 			<Form addTask={addTask} />
-			{/* <div className="filters btn-group stack-exception">{filterList}</div> */}
+			<div className="filters btn-group stack-exception">{filterList}</div>
 			<h2 id="list-heading">{headingTxt}</h2>
 			<ul
 				role="list"

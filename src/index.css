@@ -56,7 +56,7 @@ input[type="text"] {
 	border-radius: 0;
 }
 body {
-	background-color: #f5f5f5;
+	background-color: lightgoldenrodyellow;
 	color: #4d4d4d;
 	font: 1.6rem/1.25 Arial, sans-serif;
 	margin: 0 auto;
@@ -86,8 +86,10 @@ body {
 	border-width: 1px;
 }
 .btn.toggle-btn[aria-pressed="true"] {
-	border-color: #4d4d4d;
+	border-color: grey;
 	text-decoration: underline;
+	background-color: black;
+	color: #fff;
 }
 .btn__danger {
 	background-color: #ca3c3c;
@@ -97,8 +99,14 @@ body {
 .btn__filter {
 	border-color: lightgrey;
 }
+.btn__edit {
+	background-color: #228bec;
+	border-color: #0973d6;
+	color: #fff;
+}
 .btn__primary {
-	background-color: #000;
+	background-color: green;
+	border-color: darkgreen;
 	color: #fff;
 }
 .btn-group {
@@ -150,10 +158,12 @@ body {
 /* General app styles */
 .todoapp {
 	background: #fff;
-	box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 2.5rem 5rem 0 rgb(0 0 0 / 10%);
+	box-shadow: 0 2px 4px 0 rgba(5, 88, 30, 0.349),
+		0 2.5rem 5rem 0 rgb(0 0 0 / 10%);
 	margin: 2rem 0 4rem 0;
 	padding: 1rem;
 	position: relative;
+	border-radius: 5%;
 }
 @media screen and (min-width: 550px) {
 	.todoapp {
