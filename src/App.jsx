@@ -20,19 +20,40 @@ function App(props) {
 		setTasks([...tasks, newTask]);
 	}
 
-	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
-	// straight up, I am reading Mozilla's MDN docs
-	// I am taking the aria tools as one thing I do want to better myself at is accessibility
+	function toggleTaskCompleted(id) {
+		//we want this to change the completed prop of ONLY the toggled task
+		//to do this, we will map over the list and change the one we toggled
+		const updatedTasks = tasks.map((task) => {
+			//if this task has same id as toggled task
+			if (id === task.id) {
+				//use obj spread to make new obj with inverted completed prop
+				return { ...task, completed: !task.completed };
+			}
+			return task;
+		});
+		setTasks(updatedTasks); //updates state
+	}
+
+	function deleteTask(id) {
+		//use array prototype filter to filter out a task from a new array if id prop matches id argument
+		const remainingTasks = tasks.filter((task) => id !== task.id);
+		setTasks(remainingTasks);
+	}
 
 	//lets create an array of Todos mapped from our task prop passed through from main.jsx
 	//the ?. lets us perform optional chaining to check if props.tasks is undef. or null
 	//key is a special prop for react -- we must always use a UNIQUE KEY
+
+	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
 	const taskList = tasks?.map((task) => (
 		<Todo
 			id={task.id}
 			name={task.name}
 			completed={task.completed}
 			key={task.id}
+			// callback props
+			toggleTaskCompleted={toggleTaskCompleted}
+			deleteTask={deleteTask}
 		/>
 	));
 	const taskNoun = taskList.length !== 1 ? "tasks" : "task";
