@@ -5,16 +5,30 @@ import { useState } from "react";
 function Todo(props) {
 	const [isEditing, setEditing] = useState(false);
 	const [newName, setNewName] = useState("");
+	const re = /^[a-zA-Z0-9 '.,]*$/g; //regex for alphanumerics and space button
 
 	function handleChange(e) {
-		setNewName(e.target.value);
+		const val = event.target.value;
+
+		if (val.match(re)) {
+			setNewName(e.target.value);
+		}
 	}
 
 	function handleSubmit(e) {
 		e.preventDefault();
-		props.editTask(props.id, newName);
-		setNewName("");
-		setEditing(false);
+		if (newName === "") {
+			alert("Must not be empty!");
+		} else {
+			props.editTask(props.id, newName);
+			setNewName("");
+			setEditing(false);
+		}
+	}
+
+	function createSubTask() {
+		const pID = props.id;
+		props.addTask(`New Subtask for ${props.name}`, pID, true);
 	}
 
 	const editMode = (
@@ -55,6 +69,8 @@ function Todo(props) {
 					id={props.id}
 					type="checkbox"
 					defaultChecked={props.completed}
+					parentID={props.parentID}
+					child={props.child}
 					// the anon fxn allows us to Make A Call to the fxn?
 					onChange={() => props.toggleTaskCompleted(props.id)}
 				/>
@@ -76,6 +92,13 @@ function Todo(props) {
 					onClick={() => props.deleteTask(props.id)}
 				>
 					Delete <span className="visually-hidden">{props.name}</span>
+				</button>
+				<button
+					type="button"
+					className="btn btn__edit"
+					onClick={() => createSubTask()}
+				>
+					Make Subtask
 				</button>
 			</div>
 		</div>

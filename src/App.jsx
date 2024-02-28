@@ -3,7 +3,7 @@
 import Form from "./components/Form";
 import FilterButton from "./components/FilterButton";
 import Todo from "./components/Todo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //an object with fxn values
 const FILTER_MAP = {
@@ -14,6 +14,13 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP); //gets an array of names
 
 function App(props) {
+	const [filter, setFilter] = useState("All");
+	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
+
+	useEffect(() => {
+		localStorage.setItem("ITEMS", JSON.stringify(tasks));
+	}, [tasks]);
+
 	//for creating unique IDs --> generating on my own
 	let uID = new Date().getTime();
 	function uniqueID() {
@@ -58,18 +65,19 @@ function App(props) {
 	//the ?. lets us perform optional chaining to check if props.tasks is undef. or null
 	//key is a special prop for react -- we must always use a UNIQUE KEY
 
-	const [filter, setFilter] = useState("All");
-	const [tasks, setTasks] = useState(props.tasks); //can use this in the addTask fxn
 	const taskList = tasks.filter(FILTER_MAP[filter]).map((task) => (
 		<Todo
 			id={task.id}
 			name={task.name}
 			completed={task.completed}
 			key={task.id}
+			parentID={props.parentID}
+			child={props.child}
 			// callback props
 			toggleTaskCompleted={toggleTaskCompleted}
 			deleteTask={deleteTask}
 			editTask={editTask}
+			addTask={addTask}
 		/>
 	));
 
@@ -82,9 +90,15 @@ function App(props) {
 		/>
 	));
 
-	function addTask(name) {
+	function addTask(name, parentID = null, child = false) {
 		//we need to make a newTask object to add to the array tasks
-		const newTask = { id: `${uniqueID()}`, name, completed: false };
+		const newTask = {
+			id: `${uniqueID()}`,
+			name,
+			parentID,
+			child,
+			completed: false,
+		};
 		// ...tasks copies the existing task array and then we add our newTask obj. at the end
 		setTasks([...tasks, newTask]);
 	}

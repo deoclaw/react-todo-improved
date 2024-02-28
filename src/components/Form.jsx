@@ -7,16 +7,25 @@ import { useState } from "react";
 
 function Form(props) {
 	const [name, setName] = useState("");
+	const re = /^[a-zA-Z0-9 '.,]*$/g; //regex for alphanumerics and space button
 
 	//fxn capture userinput of form
 	function handleChange(event) {
-		setName(event.target.value); //the target of the event is the input, value is what's in it, setName is the fxn that by virtue of useState lets us change name
+		const val = event.target.value;
+
+		if (val.match(re)) {
+			setName(event.target.value); //the target of the event is the input, value is what's in it, setName is the fxn that by virtue of useState lets us change name
+		}
 	}
 
 	function handleSubmit(event) {
 		event.preventDefault();
-		props.addTask(name); //sends name, the value of the input, back to the App so we can add it to the array of tasks
-		setName("");
+		if (name === "") {
+			alert("Must not be empty!");
+		} else {
+			props.addTask(name); //sends name, the value of the input, back to the App so we can add it to the array of tasks
+			setName("");
+		}
 	}
 
 	return (
