@@ -8,7 +8,7 @@ function Todo(props) {
 	const re = /^[a-zA-Z0-9 '.,]*$/g; //regex for alphanumerics and space button
 
 	function handleChange(e) {
-		const val = event.target.value;
+		const val = e.target.value;
 
 		if (val.match(re)) {
 			setNewName(e.target.value);
