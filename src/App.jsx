@@ -14,7 +14,7 @@ const FILTER_MAP = {
 const FILTER_NAMES = Object.keys(FILTER_MAP); //gets an array of names
 
 function App(props) {
-	//for creating unique IDs
+	//for creating unique IDs --> generating on my own
 	let uID = new Date().getTime();
 	function uniqueID() {
 		uID++;
